@@ -1,0 +1,21 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+// project artifact info
+group = groupId
+archivesBaseName = artifactId
+
+dependencies {
+
+    compile("com.google.code.gson:gson:${dependencyVersionGson}")
+    
+    testCompile("junit:junit:${dependencyVersionJunit}")
+    testCompile("org.mockito:mockito-core:${dependencyVersionMockito}")
+
+}
