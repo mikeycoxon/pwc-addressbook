@@ -31,6 +31,13 @@ public interface FilesService {
     Reader getReader(Path filePath);
 
     /**
+     * Checks for the existance of a file corresponding to the supplied path.
+     * @param filePath the {@link Path} of the file to check.
+     * @return true if the file exists, otherwise false.
+     */
+    boolean exists(Path filePath);
+
+    /**
      * Presents the list of files at the given {@link Path} as a {@link Stream} for consumption.
      * @param dirPath The {@link Path}
      * @return the files as a {@link Stream} of {@link Path}.
@@ -75,6 +82,12 @@ public interface FilesService {
                 throw exceptMe("Could not get reader", e);
             }
         }
+
+        @Override
+        public boolean exists(Path filePath) {
+            return Files.exists(filePath);
+        }
+
 
         @Override
         public Stream<Path> listFiles(Path dirPath) {

@@ -17,6 +17,9 @@ public interface FriendService {
 
     /**
      * Presents the names of all books currently saved.
+     * <p>
+     *     Note that names of the books correspond to the names of the files without the json extension.
+     * </p>
      * @return a set of books in alphabetical order.
      */
     TreeSet<String> books();
@@ -36,10 +39,10 @@ public interface FriendService {
     TreeSet<Friend> friends(String book);
 
     /**
-     * Displays the {@link Friend}
+     * Displays the {@link Friend} corresponding to the supplied name in the book of the supplied name
      * @param name the name of the {@link Friend}.
      * @param book the name of the book to search.
-     * @return the {@link Friend} in detail.
+     * @return the {@link Friend} in detail, or null if the {@link Friend} does not exist..
      */
     Friend friend(String name, String book);
 
@@ -110,7 +113,7 @@ public interface FriendService {
 
             Path bookPath = pathFromBook(book);
 
-            if (Files.exists(bookPath)) {
+            if (filesService.exists(bookPath)) {
                 return getFriendsFromBook(bookPath);
             } else {
                 return null;
@@ -122,10 +125,14 @@ public interface FriendService {
 
             TreeSet<Friend> friends = friends(book);
 
-            return friends
-                    .stream()
-                    .filter(f -> f.getName().equals(name))
-                    .findFirst().orElse(null);
+            if (friends != null) {
+                return friends
+                        .stream()
+                        .filter(f -> f.getName().equals(name))
+                        .findFirst().orElse(null);
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -138,11 +145,16 @@ public interface FriendService {
         @Override
         public boolean add(Friend friend, String book) {
             TreeSet<Friend> friends = friends(book);
-            friends.add(friend);
 
-            Gson gson = new Gson();
-            filesService.overwriteFile(pathFromBook(book), gson.toJson(friends).getBytes());
-            return false;
+            if (friends != null) {
+                friends.add(friend);
+
+                Gson gson = new Gson();
+                Path path = filesService.overwriteFile(pathFromBook(book), gson.toJson(friends).getBytes());
+                return (path != null);
+            } else {
+                return false;
+            }
         }
 
         @Override

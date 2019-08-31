@@ -38,6 +38,14 @@ public class FriendsFixture {
         return friends;
     }
 
+    public static TreeSet<Friend> singleFriendBook() {
+        TreeSet<Friend> friends = new TreeSet<>();
+
+        friends.add(Friend.of("Mary", "0410100200"));
+
+        return friends;
+    }
+
     public static String book1AsString() {
         TreeSet<Friend> friends = book1();
 
@@ -46,6 +54,12 @@ public class FriendsFixture {
 
     public static String emptyBookAsString() {
         TreeSet<Friend> friends = emptyBook();
+
+        return new Gson().toJson(friends);
+    }
+
+    public static String singleFriendBookAsString() {
+        TreeSet<Friend> friends = singleFriendBook();
 
         return new Gson().toJson(friends);
     }
