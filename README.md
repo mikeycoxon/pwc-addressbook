@@ -5,9 +5,10 @@ This project is a solution to the PWC coding challenge, presented under the `Cod
 
 ### Driving Instructions
 * clone this repo
-* run `./gradlew shadowJar`
-* take the app-version-all.jar from build/libs/
-* run it in your terminal of choice with: `java -jar app-version-all.jar`
+* run `./gradlew jar`
+* take the address-book-1.0.0-SNAPSHOT.jar from build/libs/
+* run it in your terminal of choice with: `java -jar build/libs/address-book-1.0.0-SNAPSHOT.jar`
+* you may have to `chmod 777` the jar if you get permission denied.
 
 ### Scope & Assumptions
 * This is a command-line based application
@@ -18,6 +19,7 @@ This project is a solution to the PWC coding challenge, presented under the `Cod
 
 ### Outstanding Bugs
 1. As commented under the App.java file, the user has to hit a RETURN before using any of the commands in the program (happy to get any Stack Overflow links that I haven't seen yet)
+This only seems to happen if you are running it in an IDE, on the commandline is seems to be OK.
 
 ## Coding Challenge 
 

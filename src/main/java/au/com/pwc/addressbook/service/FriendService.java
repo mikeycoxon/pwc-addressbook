@@ -1,15 +1,15 @@
 package au.com.pwc.addressbook.service;
 
+import au.com.pwc.addressbook.BookException;
 import au.com.pwc.addressbook.model.Friend;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -67,7 +67,7 @@ public interface FriendService {
 
     class Default implements FriendService {
 
-        private static final Type FRIEND_TYPE = new TypeToken<Set<Friend>>() {}.getType();
+        private static final Type FRIEND_TYPE = new TypeToken<Friend>() {}.getType();
 
         private FilesService filesService;
         private Path booksPath;
@@ -165,18 +165,34 @@ public interface FriendService {
 
             JsonReader reader = new JsonReader(filesService.getReader(b));
 
-            Set<Friend> data = gson.fromJson(reader, FRIEND_TYPE);
+            TreeSet<Friend> data = new TreeSet<>();
+            try {
+                reader.beginArray();
+                while (reader.hasNext()) {
+                    Friend f = gson.fromJson(reader, FRIEND_TYPE);
+                    data.add(f);
+                }
+                reader.endArray();
+                reader.close();
+            } catch (IOException e) {
+                exceptMe("unable to read from file", e);
+            }
 
-            return new TreeSet<>(data);
+            return data;
         }
 
         @Override
         public boolean reset() {
-            return filesService.delete(booksPath);
+            filesService.listFiles(booksPath).forEach(path -> filesService.delete(path));
+            return true;
         }
 
         private Path pathFromBook(String book) {
             return Paths.get(booksPath + "/" + book + ".json");
+        }
+
+        private BookException exceptMe(String message, Exception e) {
+            return new BookException(message, e);
         }
 
     }

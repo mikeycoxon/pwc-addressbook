@@ -41,7 +41,7 @@ public class App {
         //    and so the call to Scanner.nextLine returns after reading that newline, rather than the text you
         //    intended to execute.
         // It's not that. As you can see I don't use any of the Scanner.nextXXX methods, other than Scanner.nextLine
-        System.out.println("Please hit RETURN before using any of the above commands (yes, there's a bug).\r\n");
+        System.out.println("If you are running this inside an IDE, please hit RETURN before using any of the above commands (yes, there's a bug).\r\n");
 
         FilesService fileService = new FilesService.Default();
 
@@ -64,7 +64,6 @@ public class App {
 
             if (err != null) {
                 System.out.println(err);
-                System.exit(1);
             }
 
             String[] switches = Command.subjects(cmd);
@@ -111,15 +110,23 @@ public class App {
                     // wipe the board clean;
                     service.reset();
 
-                    service.add("Book1");
-                    service.add(Friend.of("Bob", "0400000100"), "Book1");
-                    service.add(Friend.of("Mary", "0400000200"), "Book1");
-                    service.add(Friend.of("Jane", "0400000300"), "Book1");
+                    boolean created = service.add("Book1");
+                    if (created) {
+                        service.add(Friend.of("Bob", "0400000100"), "Book1");
+                        service.add(Friend.of("Mary", "0400000200"), "Book1");
+                        service.add(Friend.of("Jane", "0400000300"), "Book1");
+                    } else {
+                        System.out.println("could not create Book1");
+                    }
 
-                    service.add("Book2");
-                    service.add(Friend.of("Mary", "0400000200"), "Book2");
-                    service.add(Friend.of("John", "0400000400"), "Book2");
-                    service.add(Friend.of("Jane", "0400000300"), "Book2");
+                    created = service.add("Book2");
+                    if (created) {
+                        service.add(Friend.of("Mary", "0400000200"), "Book2");
+                        service.add(Friend.of("John", "0400000400"), "Book2");
+                        service.add(Friend.of("Jane", "0400000300"), "Book2");
+                    } else {
+                        System.out.println("could not create Book2");
+                    }
                     System.out.println("generated two books");
 
                 case EXIT:
