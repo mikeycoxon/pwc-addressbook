@@ -17,7 +17,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -256,5 +255,25 @@ public class FriendServiceTest {
         // Then
         assertThat(actual, is(false));
     }
+
+    @Test
+    public void friendsUniqueToEachBook_returns_the_union_of_friends() {
+        // Given
+        when(filesService.listFiles(any(Path.class)))
+                .thenReturn(FriendsFixture.twoBooks());
+        when(filesService.getReader(any(Path.class)))
+                .thenReturn(new StringReader(FriendsFixture.book1AsString()))
+                .thenReturn(new StringReader(FriendsFixture.book2AsString()));
+
+        // When
+        TreeSet<Friend> actual = service.friendsUniqueToEachBook();
+
+        // Then
+        assertThat(actual, is(notNullValue()));
+        assertThat(actual.size(), is(2));
+        assertThat(actual.first(), is(Friend.of("Bob", "0290824577")));
+        assertThat(actual.last(), is(Friend.of("John", "0290824566")));
+    }
+
 
 }

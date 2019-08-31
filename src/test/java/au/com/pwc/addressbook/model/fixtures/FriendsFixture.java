@@ -52,6 +52,12 @@ public class FriendsFixture {
         return new Gson().toJson(friends);
     }
 
+    public static String book2AsString() {
+        TreeSet<Friend> friends = book2();
+
+        return new Gson().toJson(friends);
+    }
+
     public static String emptyBookAsString() {
         TreeSet<Friend> friends = emptyBook();
 
@@ -70,6 +76,16 @@ public class FriendsFixture {
         books.add(Paths.get("/Users/me/dev/ws-other/pwc-address-book/books/book1.json"));
         books.add(Paths.get("/Users/me/dev/ws-other/pwc-address-book/books/book2.json"));
         books.add(Paths.get("/Users/me/dev/ws-other/pwc-address-book/books/emptyBook.json"));
+
+        return books.stream();
+
+    }
+
+    public static Stream<Path> twoBooks() {
+        Set<Path> books = new HashSet<>();
+
+        books.add(Paths.get("/Users/me/dev/ws-other/pwc-address-book/books/book1.json"));
+        books.add(Paths.get("/Users/me/dev/ws-other/pwc-address-book/books/book2.json"));
 
         return books.stream();
 

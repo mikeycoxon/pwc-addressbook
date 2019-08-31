@@ -1,5 +1,13 @@
 package au.com.pwc.addressbook;
 
+import static au.com.pwc.addressbook.model.Messages.ERR_ADD_REQUIRES_SWITCH;
+import static au.com.pwc.addressbook.model.Messages.ERR_ADD_WITH_F_MUST_HAVE_B;
+import static au.com.pwc.addressbook.model.Messages.ERR_BAD_B_SWITCH_FORMAT;
+import static au.com.pwc.addressbook.model.Messages.ERR_BAD_F_SWITCH_FORMAT;
+import static au.com.pwc.addressbook.model.Messages.ERR_SEE_REQUIRES_SWITCH;
+import static au.com.pwc.addressbook.model.Messages.ERR_SEE_WITH_F_MUST_HAVE_B;
+import static au.com.pwc.addressbook.model.Messages.ERR_UNSUPPORTED_COMMAND;
+
 public enum Command {
     SEE("see"),
 
@@ -46,31 +54,31 @@ public enum Command {
     public static String validate(String cmd) {
 
         if (!cmd.startsWith("see") && !cmd.startsWith("list") && !cmd.startsWith("add") && !cmd.startsWith("exit")) {
-            return "A command must start with either see, list, add or exit";
+            return ERR_UNSUPPORTED_COMMAND;
         }
 
-        if (cmd.contains("see") && !cmd.contains("see -f ") && !cmd.contains("see -b ")) {
-            return "The 'see' command must be followed by a switch";
+        if (cmd.contains("see") && !cmd.contains("see -f") && !cmd.contains("see -b")) {
+            return ERR_SEE_REQUIRES_SWITCH;
         }
 
-        if (cmd.contains("see") && cmd.contains("see -f ") && !cmd.contains(" -b ")) {
-            return "The 'see' command with an -f switch must have a -b switch";
+        if (cmd.contains("see") && cmd.contains("see -f") && !cmd.contains(" -b")) {
+            return ERR_SEE_WITH_F_MUST_HAVE_B;
         }
 
-        if (cmd.contains("add") && !cmd.contains("add -f ") && !cmd.contains("add -b ")) {
-            return "The 'add' command must be followed by a switch";
+        if (cmd.contains("add") && !cmd.contains("add -f") && !cmd.contains("add -b")) {
+            return ERR_ADD_REQUIRES_SWITCH;
         }
 
-        if (cmd.contains("add") && cmd.contains("add -f ") && !cmd.contains(" -b ")) {
-            return "The 'add' command with an -f switch must have a -b switch";
+        if (cmd.contains("add") && cmd.contains("add -f") && !cmd.contains(" -b")) {
+            return ERR_ADD_WITH_F_MUST_HAVE_B;
         }
 
         if (cmd.contains("-f") && !cmd.contains(" -f ")) {
-            return "The friend switch (-f) must be surrounded by spaces";
+            return ERR_BAD_F_SWITCH_FORMAT;
         }
 
         if (cmd.contains("-b") && !cmd.contains(" -b ")) {
-            return "The book switch (-b) must be surrounded by spaces";
+            return ERR_BAD_B_SWITCH_FORMAT;
         }
 
         return null;

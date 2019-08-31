@@ -1,8 +1,12 @@
+
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
 repositories {
     mavenCentral()
 }
-
-apply plugin: 'java'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -14,6 +18,17 @@ archivesBaseName = artifactId
 jar {
     manifest {
         attributes 'Main-Class': 'au.com.pwc.addressbook.App'
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+}
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
     }
 }
 
