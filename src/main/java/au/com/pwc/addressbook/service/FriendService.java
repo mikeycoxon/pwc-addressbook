@@ -1,18 +1,14 @@
 package au.com.pwc.addressbook.service;
 
-import au.com.pwc.addressbook.BookException;
 import au.com.pwc.addressbook.model.Friend;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -74,7 +70,7 @@ public interface FriendService {
         public Default(FilesService filesService) {
             this.filesService = filesService;
 
-            booksPath = Paths.get(System.getProperty("user.dir") + "/book");
+            booksPath = Paths.get(System.getProperty("user.dir") + "/books");
 
             filesService.createMissingDirectory(booksPath);
         }
@@ -83,6 +79,7 @@ public interface FriendService {
         public TreeSet<String> books() {
             TreeSet<String> books = filesService.listFiles(booksPath)
                         .map(Path::toString)
+                        .map(s -> s.substring(s.lastIndexOf("/") + 1, s.indexOf(".")))
                         .collect(Collectors.toCollection(TreeSet::new));
             return books;
         }
@@ -111,11 +108,13 @@ public interface FriendService {
         @Override
         public TreeSet<Friend> friends(String book) {
 
-            Optional<Path> bookPath = filesService.listFiles(booksPath)
-                    .filter(b -> !b.endsWith(book))
-                    .findFirst();
+            Path bookPath = pathFromBook(book);
 
-            return getFriendsFromBook(bookPath.get());
+            if (Files.exists(bookPath)) {
+                return getFriendsFromBook(bookPath);
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -131,11 +130,18 @@ public interface FriendService {
 
         @Override
         public boolean add(String book) {
-            return false;
+
+            Path path = filesService.createFile(pathFromBook(book));
+            return (path != null);
         }
 
         @Override
         public boolean add(Friend friend, String book) {
+            TreeSet<Friend> friends = friends(book);
+            friends.add(friend);
+
+            Gson gson = new Gson();
+            filesService.overwriteFile(pathFromBook(book), gson.toJson(friends).getBytes());
             return false;
         }
 
@@ -148,6 +154,10 @@ public interface FriendService {
             Set<Friend> data = gson.fromJson(reader, FRIEND_TYPE);
 
             return new TreeSet<>(data);
+        }
+
+        private Path pathFromBook(String book) {
+            return Paths.get(booksPath + "/" + book + ".json");
         }
 
     }

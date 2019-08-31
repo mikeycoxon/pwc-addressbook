@@ -11,6 +11,12 @@ targetCompatibility = '1.8'
 group = groupId
 archivesBaseName = artifactId
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'au.com.pwc.addressbook.App'
+    }
+}
+
 dependencies {
 
     compile("com.google.code.gson:gson:${dependencyVersionGson}")

@@ -5,14 +5,21 @@ public enum Command {
 
     ADD("add"),
 
-    LIST("list");
+    LIST("list"),
+
+    EXIT("exit");
 
     Command(String name) {
         this.name = name;
     }
 
     public static Command read(String cmd) {
-        return Command.valueOf(cmd.substring(0, cmd.indexOf('-')));
+        if (cmd.contains("-")) {
+            return Command.valueOf(cmd.substring(0, cmd.indexOf('-') - 1).toUpperCase());
+        } else {
+            return Command.valueOf(cmd.toUpperCase());
+        }
+
     }
 
     private String name;
@@ -30,14 +37,16 @@ public enum Command {
             subjects = new String[]{fSwitchSubject(cmd)};
         } else if (cmd.contains("-b")) {
             subjects = new String[]{bSwitchSubject(cmd)};
+        } else {
+            subjects = new String[]{};
         }
         return subjects;
     }
 
     public static String validate(String cmd) {
 
-        if (!cmd.startsWith("see") && !cmd.startsWith("list") && !cmd.startsWith("add")) {
-            return "A command must start with either see, list or add";
+        if (!cmd.startsWith("see") && !cmd.startsWith("list") && !cmd.startsWith("add") && !cmd.startsWith("exit")) {
+            return "A command must start with either see, list, add or exit";
         }
 
         if (cmd.contains("see") && !cmd.contains("see -f ") && !cmd.contains("see -b ")) {
