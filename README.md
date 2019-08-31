@@ -17,6 +17,11 @@ This project is a solution to the PWC coding challenge, presented under the `Cod
 * Last names are not supported
 * No two entries in any address book can have the same name
 
+### Ran Out of Time
+As I reached the 8-hour mark, there were still some things I would like to have done:
+1. Put unit tests around the FileService - I needed to mock out the file system, which is something that would have needed some test infrastructure.
+1. Implement a FormattingService that would have made the Sys.outs a bit nicer.
+
 ### Outstanding Bugs
 1. As commented under the App.java file, the user has to hit a RETURN before using any of the commands in the program (happy to get any Stack Overflow links that I haven't seen yet)
 This only seems to happen if you are running it in an IDE, on the commandline is seems to be OK.
