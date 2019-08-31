@@ -15,7 +15,9 @@ public enum Command {
 
     LIST("list"),
 
-    EXIT("exit");
+    EXIT("exit"),
+
+    GEN("gen");
 
     Command(String name) {
         this.name = name;
@@ -41,6 +43,8 @@ public enum Command {
 
         if (cmd.contains("-f") && cmd.contains("-b")) {
             subjects = new String[]{cmd.substring(cmd.indexOf("-f") + 3, cmd.indexOf("-b") - 1), bSwitchSubject(cmd)};
+        } else if (cmd.contains("-u")) {
+            subjects = new String[]{uSwitchSubject()};
         } else if (cmd.contains("-f")) {
             subjects = new String[]{fSwitchSubject(cmd)};
         } else if (cmd.contains("-b")) {
@@ -53,7 +57,7 @@ public enum Command {
 
     public static String validate(String cmd) {
 
-        if (!cmd.startsWith("see") && !cmd.startsWith("list") && !cmd.startsWith("add") && !cmd.startsWith("exit")) {
+        if (!cmd.startsWith("see") && !cmd.startsWith("list") && !cmd.startsWith("add") && !cmd.startsWith("exit") && !cmd.startsWith("gen")) {
             return ERR_UNSUPPORTED_COMMAND;
         }
 
@@ -90,6 +94,10 @@ public enum Command {
 
     private static String fSwitchSubject(String cmd) {
         return cmd.substring(cmd.indexOf("-f") + 3);
+    }
+
+    private static String uSwitchSubject() {
+        return "";
     }
 
 }

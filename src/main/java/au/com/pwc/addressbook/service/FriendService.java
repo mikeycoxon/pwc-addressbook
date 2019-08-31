@@ -61,6 +61,8 @@ public interface FriendService {
      */
     boolean add(Friend friend, String book);
 
+    boolean reset();
+
     TreeSet<Friend> getFriendsFromBook(Path b);
 
     class Default implements FriendService {
@@ -166,6 +168,11 @@ public interface FriendService {
             Set<Friend> data = gson.fromJson(reader, FRIEND_TYPE);
 
             return new TreeSet<>(data);
+        }
+
+        @Override
+        public boolean reset() {
+            return filesService.delete(booksPath);
         }
 
         private Path pathFromBook(String book) {

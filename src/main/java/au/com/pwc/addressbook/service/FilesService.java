@@ -60,6 +60,12 @@ public interface FilesService {
      */
     Path overwriteFile(Path filePath, byte[] content);
 
+    /**
+     * <p>Deletes all files on the path</p>
+     * @return true if deltion successful.
+     */
+    boolean delete(Path path);
+
     class Default implements FilesService {
 
         @Override
@@ -114,6 +120,17 @@ public interface FilesService {
             } catch (IOException e) {
                 throw exceptMe("Could not write to file", e);
             }
+        }
+
+        @Override
+        public boolean delete(Path path) {
+            try {
+                Files.delete(path);
+                return true;
+            } catch (IOException e) {
+                throw exceptMe("Could not write to file", e);
+            }
+
         }
 
         private BookException exceptMe(String message, Exception e) {

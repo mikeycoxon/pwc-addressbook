@@ -66,6 +66,13 @@ public class CommandTest {
     }
 
     @Test
+    public void validate_ok_when_list_has_the_u_switch() {
+        String errs = Command.validate("list -u");
+
+        assertThat(errs, is(nullValue()));
+    }
+
+    @Test
     public void validate_err_when_unsupported_command_passed_in() {
         String errs = Command.validate("foo");
 
